@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Application{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="firm">Firm</label>
+    <input name="firm" id="firm" value="{{ request.form['firm'] }}" required>
+    <label for="firstname">First name</label>
+    <input name="firstname" id="firstname" value="{{ request.form['firstname'] }}" required>
+    <label for="lastname">Last name</label>
+    <input name="lastname" id="lastname" value="{{ request.form['lastname'] }}" required>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

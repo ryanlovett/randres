@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Application details{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<button class="accordion">Contact Information</button>
+  <div class="panel">
+    <div>Name: {{ details['contact'][1] }}, {{ details['contact'][0] }}</div>
+    <div>Number: {{ details['contact'][2] }}</div>
+    <div>Email: {{ details['contact'][3] }}</div>
+    <div>Address: {{ details['contact'][4] }}</div>
+</div>
+  <br />
+
+<button class="accordion">Demographics</button>
+  <div class="panel">
+    <div>Race: {{ details['demos'][1] }}</div>
+    <div>Gender: {{ details['demos'][0] }}</div>
+    <div>DOB: {{ details['demos'][2] }}</div>
+</div>
+  <br />
+
+<button class="accordion">Employment History</button>
+  <div class="panel">
+  {% for item in details['job_hist'] %} 
+      <div>Firm: {{ item[0] }}</div>
+      <div>Position: {{ item[1] }}</div>
+      <div>Address: {{ item[2] }}</div>
+      <div>Supervisor: {{ item[3] }}</div>
+      <div>Start date: {{ item[4] }}</div>
+      <div>End date: {{ item[5] }}</div>
+  <br />
+  {% endfor %}
+</div>
+  <br />
+
+<button class="accordion">Availability</button>
+  <div class="panel">
+    <div>Desired hours: {{ details['avail'][0] }}</div>
+    <div>Can work all days? {{ details['avail'][1] }}</div>
+    <div>Notice required for current job: {{ details['avail'][2] }}</div>
+    <div>Desired start date: {{ details['avail'][3] }}</div>
+</div>
+  <br />
+
+<script src={{ url_for('static', filename='buttons.js') }}></script>
+
+
+{% endblock %}

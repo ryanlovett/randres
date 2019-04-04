@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Current applications{% endblock %}</h1>
+  {% if g.user %}
+    <a href="{{ url_for('generate.create', job_id=job_id, firm=firm) }}">Generate a new application</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for app in apps %}
+    <article>
+      <header>
+        <div>
+          <div>ID: {{ app['id'] }}</div>
+          <div>Name: {{ app['lastname'] }}, {{ app['firstname'] }}</div>
+          <div>Created on {{ app['created'].strftime('%Y-%m-%d %H:%M:%S') }}</div>
+          <div><a href="{{ url_for('generate.show_details', app_id=app['id']) }}">Show details</a></div>
+        </div>
+      </header>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

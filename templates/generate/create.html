@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Generate a New Application{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="job_id">Job ID</label>
+    <input name="job_id" id="job_id" value="{{ job_id }}" required>
+    <label for="firm">Firm</label>
+    <input name="firm" id="firm" value="{{ firm }}" required> <br />
+    <label for="race">Race</label>
+    <select name="race">
+      <option value="Black">Black</option>
+      <option value="White">White</option>
+    </select><br /> 
+    <label for="gender">Gender</label>
+    <select name="gender">
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select><br /> 
+    <input type="submit" value="Go!">
+  </form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Available jobs{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for job in jobs %}
+    <article>
+      <header>
+        <div>
+          <div>ID: {{ job['id'] }}, Firm: {{ job['firm'] }}</div>
+          <div>Address: {{ job['street'] }}, {{ job['city'] }}, {{ job['state'] }}, {{ job['zipcode'] }}</div>
+          <div>Application: <a href={{ job['link'] }}>{{ job['link'] }}</a></div>
+          <div>Created on {{ job['created'].strftime('%Y-%m-%d %H:%M:%S') }}</div>
+          <div><a href="{{ url_for('generate.create', job_id=job['id'], firm=job['firm']) }}">Generate an application</a></div>
+          <div><a href="{{ url_for('app_list', job_id=job['id'], firm=job['firm']) }}">See current applications</a></div>
+        </div>
+      </header>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
