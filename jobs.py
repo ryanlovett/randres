@@ -21,7 +21,7 @@ def get_jobs(curr_app, potential_addys):
 	sjob = np.random.choice([k for k in potential_firms if k is not curr_app], 1)[0]
 	spos = np.random.choice(positions, 1)[0]
 	saddy = potential_addys.sample(1).values[0,0]
-	ssup = np.random.choice(supervisors, 1)[0]
+	ssup = np.random.choice([k for k in supervisors if k is not fsup], 1)[0]
 	sstart = "{}/{}".format(today.month,today.year-3)
 	send = "{}/{}".format(today.month,today.year-2)
 
