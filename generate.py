@@ -52,11 +52,16 @@ def create():
         # Address
         addy_id = potential_addys.sample(1).values[0,0]
 
-        # Put into its table
-        job_hist = get_jobs(firm, potential_addys) 
+        # Age -- get random date between 1980 and 2000
+        dob = "{}/{}/{}".format(np.random.choice(range(1,13),1)[0],
+                        np.random.choice(range(1,28),1)[0],
+                        np.random.choice(range(1980,2000),1)[0])
+        graduation_year = pd.to_datetime(dob, format="%m/%d/%Y").year + 18             # Year you turn 18
 
-        # Age
-        dob = "2/4/1980"
+        # Put into its table
+        job_hist = get_jobs(firm, potential_addys, dob) 
+
+        # Other stuff
         pin = 5494
         over16 = True
         can_prove = True
