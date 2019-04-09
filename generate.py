@@ -2,6 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 import pandas as pd
+import numpy as np
 from db import get_db
 from db import get_addy
 from db import get_job_hist
