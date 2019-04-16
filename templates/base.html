@@ -2,7 +2,7 @@
 <title>{% block title %}{% endblock %} - Randres</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
-  <h1>Randres v. 1.0</h1>
+  <h1><img src="{{ url_for('static', filename='scroll.png') }}" width="50" height="50"> Randres v. 1.1 </h1>
   <ul>
     {% if g.user %}
       <li><span>Logged in as: {{ g.user['username'] }}</span>
