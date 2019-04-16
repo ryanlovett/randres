@@ -69,6 +69,7 @@ CREATE TABLE job (
 );
 
 INSERT INTO user (username) VALUES ("ekrose");
+INSERT INTO user (username) VALUES ("ekrose");
 
 INSERT INTO job (firm, city, state, street, zipcode, link, user_id) VALUES 
 	("KFC", "Excelsior Springs", "MO", "1744 West Jesse James Road", 64024,
