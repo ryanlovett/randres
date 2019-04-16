@@ -78,8 +78,10 @@ def create_app():
 		    job = request.args.get("job_id")
 		    firm = request.args.get("firm")
 		    apps = dbase.execute(
-		        'SELECT id, firstname, lastname, created'
-		        ' FROM app WHERE job_id = {} ORDER BY id DESC'.format(job)
+		        'SELECT app.id, firstname, lastname, created, username'
+		        ' FROM app'
+		        ' LEFT JOIN user ON user.id = app.user_id'
+		        ' WHERE job_id = ? ORDER by app.id DESC', (job,)
 		    ).fetchall()
 		    return render_template('app_list.html', apps=apps, job_id=job, firm=firm)
 
