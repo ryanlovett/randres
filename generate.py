@@ -71,7 +71,7 @@ def create():
             close_schls = potential_schls
 
         # Actual schl
-        schl_id = close_schls.sample(1)values[0,0]
+        schl_id = close_schls.sample(1).values[0,0]
 
         # Age -- get random date between 1980 and 2000
         dob = "{}/{}/{}".format(np.random.choice(range(1,13),1)[0],
