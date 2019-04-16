@@ -4,6 +4,9 @@ import sqlite3
 import csv
 import gzip
 
+if raw_input("Are you sure you want to run this script? Any existing information in the database will be overwritten (y/n)") != "y":
+    exit()
+
 conn = sqlite3.connect('instance/randres.sqlite')
 db = conn.cursor()
 conn.text_factory = str
