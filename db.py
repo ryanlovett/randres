@@ -59,6 +59,18 @@ def init_db():
                             (i['number'], i['street'], i['unit'], i['city'], i['region'], i['zipcode']))
         db.commit()
 
+    # Add the school list
+    schl_list = pkg_resources.resource_filename(resource_package, '/'.join(('assets', 'schl_sample.csv')))
+    with open(schl_list) as fin: 
+        dr = csv.DictReader(fin) 
+        for i in dr:
+            print(i['LSTATE09'], i['SCHNAM09'], i['LZIP09']) 
+            db.execute("INSERT INTO schl (name, state, zip) "
+                            "VALUES (?, ?, ?)",
+                            (i['LSTATE09'], i['SCHNAM09'], i['LZIP09']))
+        db.commit()
+
+
 @click.command('init-db')
 @with_appcontext
 def init_db_command():

@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS app;
 DROP TABLE IF EXISTS addy;
 DROP TABLE IF EXISTS job;
 DROP TABLE IF EXISTS work_hist;
+DROP TABLE IF EXISTS schl;
 
 CREATE TABLE user (
  id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,6 +31,7 @@ CREATE TABLE app (
  FOREIGN KEY (user_id) REFERENCES user (id),
  FOREIGN KEY (job_id) REFERENCES job (id),
  FOREIGN KEY (addy_id) REFERENCES addy (id)
+ FOREIGN KEY (schl_id) REFERENCES addy (id)
 );
 
 CREATE TABLE work_hist (
@@ -55,6 +57,13 @@ CREATE TABLE addy (
  zip INTEGER NOT NULL
 );
 
+CREATE TABLE schl (
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ name TEXT NOT NULL,
+ state TEXT NOT NULL,
+ zip INTEGER NOT NULL
+);
+
 CREATE TABLE job (
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  firm TEXT NOT NULL,
@@ -69,7 +78,8 @@ CREATE TABLE job (
 );
 
 INSERT INTO user (username) VALUES ("ekrose");
-INSERT INTO user (username) VALUES ("ekrose");
+INSERT INTO user (username) VALUES ("pkline");
+INSERT INTO user (username) VALUES ("crwalters");
 
 INSERT INTO job (firm, city, state, street, zipcode, link, user_id) VALUES 
 	("KFC", "Excelsior Springs", "MO", "1744 West Jesse James Road", 64024,
