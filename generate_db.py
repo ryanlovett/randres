@@ -6,6 +6,7 @@ import gzip
 
 conn = sqlite3.connect('instance/randres.sqlite')
 db = conn.cursor()
+conn.text_factory = str
 
 with open('randres/schema.sql') as f:
     db.executescript(f.read())
