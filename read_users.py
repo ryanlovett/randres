@@ -2,7 +2,9 @@
 import squlite
 
 
-conn = sqlite3.connect()
+conn = sqlite3.connect('instance/randres.sqlite')
 cur = conn.cursor()
 
-users = cur.exectute("SELECTION * FROM users")
+users = cur.exectute("SELECTION * FROM users").fetchall()
+for row in users:
+	print(row)
