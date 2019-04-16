@@ -36,7 +36,7 @@ def get_schlname(id):
             'SELECT name'
             ' FROM schl WHERE id = ? ORDER BY id DESC', (id,)
             ).fetchone()
-    return str(schl)
+    return " ".join([str(x) for x in schl])
 
 def get_schladdress(id):
     db = get_db()

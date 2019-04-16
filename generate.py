@@ -50,9 +50,10 @@ def create():
         	'SELECT id, numb, street, city, region, zip'
         	' FROM addy WHERE region = ?', (job_state,) )
         potential_addys = pd.DataFrame(potential_addys.fetchall())
+        print(potential_addys.head())
 
         # Sample addresses within 1k of jobzip
-        close_addys = potential_addys.loc[np.abs(potential_addys.zip - jobzip) <= 1000]
+        close_addys = potential_addys.loc[np.abs(potential_addys[5] - job_zip) <= 1000]
         if close_addys.shape[0] <= 1000:
             close_addys = potential_addys
 
@@ -62,11 +63,11 @@ def create():
         # Pull all the schools from the state
         potential_schls = db.execute(
             'SELECT id, name, state, zip'
-            ' FROM addy WHERE state = ?', (job_state,) )
+            ' FROM schl WHERE state = ?', (job_state,) )
         potential_schls = pd.DataFrame(potential_schls.fetchall())
 
         # Sample schools within 1k of jobzip
-        close_schls = potential_schls.loc[np.abs(potential_schls.zip - jobzip) <= 1000]
+        close_schls = potential_schls.loc[np.abs(potential_schls[3] - job_zip) <= 1000]
         if close_schls.shape[0] <= 1000:
             close_schls = potential_schls
 
@@ -77,7 +78,7 @@ def create():
         dob = "{}/{}/{}".format(np.random.choice(range(1,13),1)[0],
                         np.random.choice(range(1,28),1)[0],
                         np.random.choice(range(1980,2000),1)[0])
-        graduation_year = pd.to_datetime(dob, format="%m/%d/%Y").year + 18             # Year you turn 18
+        grad_year = pd.to_datetime(dob, format="%m/%d/%Y").year + 18             # Year you turn 18
 
         # Put into its table
         job_hist = get_jobs(firm, close_addys, dob) 
@@ -124,7 +125,7 @@ def create():
 
         # Redirect
         details = (g.user['id'], job_id, firstname, lastname, gender, race, dob, phone, email,
-        		addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, graduation_year)
+        		addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year)
         curs.execute(
             'INSERT INTO app (user_id, job_id, firstname, lastname, gender, race, dob, phone, email,'
         	' addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year)'
@@ -149,9 +150,10 @@ def create():
         		'demos': [gender, race, dob],
         		'job_hist': get_job_hist(lastrow),
         		'avail': [hours, available_all_week, notice, start_date],
-                'schl': [grad_year, get_schladdress(schl_id), get_schlname(schl_id)]
+                'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year]
 
         }
+        print(get_schladdress(schl_id), get_schlname(schl_id))
         return render_template('generate/show_app.html', details=full_details)
 
 @bp.route('/show_details', methods=('GET',))
@@ -172,7 +174,7 @@ def show_details():
 		'demos': [gender, race, dob],
 		'job_hist': get_job_hist(app_id),
         'avail': [hours, available_all_week, notice, start_date],
-        'schl': [grad_year, get_schlname(schl_id)]	
+        'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year]
 		}
 	return render_template('generate/show_app.html', details=full_details)
 

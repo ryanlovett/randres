@@ -39,12 +39,10 @@
 
  <button class="accordion">Education History</button>
   <div class="panel">
-  {% for item in details['schl'] %} 
-      <div>School: {{ item[0] }}</div>
-      <div>Adress: {{ item[1] }}</div>
-      <div>Graduation year: {{ item[2] }}</div>
+    <div>School: {{ details['schl'][0] }}</div>
+    <div>Adress: {{  details['schl'][1] }}</div>
+    <div>Graduation year: {{  details['schl'][2] }}</div>
   <br />
-  {% endfor %}
 </div>
   <br /> 
 
