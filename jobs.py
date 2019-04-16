@@ -58,14 +58,15 @@ def get_jobs(curr_app, potential_addys, dob):
 		sup_list += [sup]
 		if k == 0:
 			tenure = np.random.choice(range(8,25),1)[0]
-			start = "{}/{}".format((today_pd - pd.DateOffset(tenure,'months')).month, (today_pd - pd.DateOffset(tenure,'months')).year)
+			start = "{}/{}".format((today_pd - pd.DateOffset(months=tenure)).month, (today_pd - pd.DateOffset(months=tenure)).year)
 			end = "Present"
 		else:
 			tenure += np.random.choice(range(8,25),1)[0]
+			print(tenure)
 			if ((today_pd - pd.DateOffset(tenure,'months')).year - dob.year <= 18): # Don't do more jobs for young kids
 				break
 			end = start
-			start = "{}/{}".format((today_pd - pd.DateOffset(tenure,'months')).month, (today_pd - pd.DateOffset(tenure,'months')).year)
+			start = "{}/{}".format((today_pd - pd.DateOffset(months=tenure)).month, (today_pd - pd.DateOffset(months=tenure)).year)
 		joblist += [(job, pos, addy, sup, start, end)]
 
 	return joblist
