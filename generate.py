@@ -181,11 +181,11 @@ def show_details():
             ' schl_id, grad_year'
     ' FROM app WHERE id = {}'.format(app_id)
     ).fetchone()
+    user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year = details
 
-    firm = db.execute('SELECT firm FROM job WHERE id = {}'.format(app_id)).fetchone()
+    firm = db.execute('SELECT firm FROM job WHERE id = {}'.format(job_id)).fetchone()
     firm = "".join([x for x in firm])
 
-    user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year = details
     full_details = {
     	'contact': [firstname, lastname, phone, email, get_addy(addy_id)],
     	'demos': [gender, race, dob],
