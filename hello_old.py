@@ -81,7 +81,6 @@ def create_app():
 		        'SELECT id, firstname, lastname, created'
 		        ' FROM app WHERE job_id = {} ORDER BY id DESC'.format(job)
 		    ).fetchall()
-		    print(apps)
 		    return render_template('app_list.html', apps=apps, job_id=job, firm=firm)
 
 	@application.route('/register', methods=('GET', 'POST'))

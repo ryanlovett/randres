@@ -62,7 +62,6 @@ def get_jobs(curr_app, potential_addys, dob):
 			end = "Present"
 		else:
 			tenure += np.random.choice(range(8,25),1)[0]
-			print(tenure)
 			if ((today_pd - pd.DateOffset(tenure,'months')).year - dob.year <= 18): # Don't do more jobs for young kids
 				break
 			end = start

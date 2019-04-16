@@ -20,6 +20,15 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
+def get_existing_names(id):
+    db = get_db()
+
+    nmes = db.execute(
+            'SELECT firstname, lastname'
+            ' FROM app WHERE job_id = ?', (id,)
+            ).fetchall()
+    return [list(x) for x in nmes]
+
 def get_addy(id):
     db = get_db()
 

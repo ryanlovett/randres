@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_name(race, gend):
+def get_name(race, gend, existing_names=[[],[]]):
 	names = {'White': {
 				'Female': ['Allison', 'Anne', 'Carrie', 'Emily', 'Jill', 'Laurie', 'Kristen',
 	        	           'Meredith', 'Sarah'],
@@ -19,8 +19,10 @@ def get_name(race, gend):
 			 		}		
 			}
 
-	try: 
-		return np.random.choice(names[race][gend],1)[0], np.random.choice(names[race]['Last'],1)[0]
+	try:
+		poss_names = [[a,b] for a in names[race][gend] for b in names[race]['Last']]
+		poss_names = [n for n in poss_names if n not in existing_names]
+		return poss_names[np.random.choice(np.arange(len(poss_names)),1)[0]]
 		raise ValueError('Race or gender category not valid.')	
 	except Exception as e:
 		return e 

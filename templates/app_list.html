@@ -16,6 +16,9 @@
           <div>Name: {{ app['lastname'] }}, {{ app['firstname'] }}</div>
           <div>Created on {{ app['created'].strftime('%Y-%m-%d %H:%M:%S') }}</div>
           <div><a href="{{ url_for('generate.show_details', app_id=app['id']) }}">Show details</a></div>
+<form action="{{ url_for('generate.delete', job_id=job_id, firm=firm, id=app['id']) }}" method="post">
+<input class="danger" type="submit" name="id" value="Delete" onclick="return confirm('Are you sure?');">
+</form>
         </div>
       </header>
     </article>

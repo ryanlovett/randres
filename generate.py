@@ -7,6 +7,7 @@ from db import get_db
 from db import get_addy
 from db import get_schlname, get_schladdress
 from db import get_job_hist
+from db import get_existing_names
 from demos import get_name
 from jobs import get_jobs
 
@@ -36,7 +37,8 @@ def create():
             flash(error)
 
         # Generate name based on data
-        firstname, lastname = get_name(race,gender)
+        existing_names = get_existing_names(job_id)
+        firstname, lastname = get_name(race,gender,existing_names)
 
         # Generate contact information
         phone = 4562311231
@@ -50,7 +52,6 @@ def create():
         	'SELECT id, numb, street, city, region, zip'
         	' FROM addy WHERE region = ?', (job_state,) )
         potential_addys = pd.DataFrame(potential_addys.fetchall())
-        print(potential_addys.head())
 
         # Sample addresses within 1k of jobzip
         close_addys = potential_addys.loc[np.abs(potential_addys[5] - job_zip) <= 1000]
@@ -150,33 +151,52 @@ def create():
         		'demos': [gender, race, dob],
         		'job_hist': get_job_hist(lastrow),
         		'avail': [hours, available_all_week, notice, start_date],
-                'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year]
-
+                'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
+                'id':addy_id,
+                'job_id':job_id,
+                'firm':firm
         }
-        print(get_schladdress(schl_id), get_schlname(schl_id))
         return render_template('generate/show_app.html', details=full_details)
+
+@bp.route('/delete', methods=('POST','GET'))
+def delete():
+    job = request.args.get("job_id")
+    firm = request.args.get("firm") 
+
+    if request.method == 'POST':
+        id = request.args.get("id") 
+        db = get_db()
+        db.execute('DELETE FROM app WHERE id = ?', (id,))
+        db.commit()
+    return redirect(url_for('app_list', job_id=job, firm=firm))
 
 @bp.route('/show_details', methods=('GET',))
 def show_details():
-	app_id = request.args.get('app_id')
-	db = get_db()
+    app_id = request.args.get('app_id')
+    db = get_db()
 
-	details = db.execute(
-	'SELECT user_id, job_id, firstname, lastname, gender, race, dob, phone, email,'
+    details = db.execute(
+    'SELECT user_id, job_id, firstname, lastname, gender, race, dob, phone, email,'
         	' addy_id, hours, ever_terminated, available_all_week, notice, start_date,'
             ' schl_id, grad_year'
-	' FROM app WHERE id = {}'.format(app_id)
-	).fetchone()
+    ' FROM app WHERE id = {}'.format(app_id)
+    ).fetchone()
 
-	user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year = details
-	full_details = {
-		'contact': [firstname, lastname, phone, email, get_addy(addy_id)],
-		'demos': [gender, race, dob],
-		'job_hist': get_job_hist(app_id),
+    firm = db.execute('SELECT firm FROM job WHERE id = {}'.format(app_id)).fetchone()
+    firm = "".join([x for x in firm])
+
+    user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year = details
+    full_details = {
+    	'contact': [firstname, lastname, phone, email, get_addy(addy_id)],
+    	'demos': [gender, race, dob],
+    	'job_hist': get_job_hist(app_id),
         'avail': [hours, available_all_week, notice, start_date],
-        'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year]
-		}
-	return render_template('generate/show_app.html', details=full_details)
+        'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
+        'id':addy_id,
+        'job_id':job_id,
+        'firm':firm
+    	}
+    return render_template('generate/show_app.html', details=full_details)
 
 
 

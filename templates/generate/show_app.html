@@ -4,6 +4,10 @@
   <h1>{% block title %}Application details{% endblock %}</h1>
 {% endblock %}
 
+  {% if g.user %}
+    <a href="{{ url_for('generate.create', job_id=details['job_id'], firm=details['firm']) }}">Generate a new application</a>
+  {% endif %}
+
 {% block content %}
 
 <button class="accordion">Contact Information</button>
@@ -55,6 +59,12 @@
 </div>
   <br />
 
+<form action="{{ url_for('generate.delete', job_id=details['job_id'], firm=details['firm'], id=details['id']) }}" method="post">
+<input class="danger" type="submit" name="id" value="Delete" onclick="return confirm('Are you sure?');">
+</form>
+
+
+<br />
 <script src={{ url_for('static', filename='buttons.js') }}></script>
 
 
