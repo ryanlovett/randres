@@ -38,11 +38,10 @@ def create():
 
         # Generate name based on data
         existing_names = get_existing_names(job_id)
-        firstname, lastname = get_name(race,gender,existing_names)
+        firstname, lastname, email = get_name(race,gender,existing_names)
 
         # Generate contact information
         phone = 4562311231
-        email = "ekrose+spam@gmail.com"
 
         # Pull all addresses for state where job is located
         job_state, job_zip = db.execute('SELECT state, zipcode FROM job WHERE id = ?',
@@ -147,14 +146,14 @@ def create():
  
         # Dictionary with full details
         full_details = {
-        		'contact': [firstname, lastname, phone, email, get_addy(addy_id)],
+        		'contact': [firstname, lastname, phone, "{}+{}@gmail.com".format(email,lastrow), get_addy(addy_id)],
         		'demos': [gender, race, dob],
         		'job_hist': get_job_hist(lastrow),
         		'avail': [hours, available_all_week, notice, start_date],
                 'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
                 'id':addy_id,
                 'job_id':job_id,
-                'firm':firm
+                'firm':firm,
         }
         return render_template('generate/show_app.html', details=full_details)
 
@@ -187,14 +186,14 @@ def show_details():
     firm = "".join([x for x in firm])
 
     full_details = {
-    	'contact': [firstname, lastname, phone, email, get_addy(addy_id)],
+    	'contact': [firstname, lastname, phone, "{}+{}@gmail.com".format(email,app_id), get_addy(addy_id)],
     	'demos': [gender, race, dob],
     	'job_hist': get_job_hist(app_id),
         'avail': [hours, available_all_week, notice, start_date],
         'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
         'id':addy_id,
         'job_id':job_id,
-        'firm':firm
+        'firm':firm,
     	}
     return render_template('generate/show_app.html', details=full_details)
 
