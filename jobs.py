@@ -41,7 +41,7 @@ def get_jobs(curr_app, potential_addys, dob):
 	dob = pd.to_datetime(dob, format="%m/%d/%Y")
 
 	## Generate three yeras of jobs history
-	njobs = np.random.choice(list(range(1,4)),1)[0]
+	njobs = np.random.choice(list(range(3,6)),1)[0]
 	joblist = []
 	sup_list = []
 	existing_jobs = []
@@ -57,11 +57,11 @@ def get_jobs(curr_app, potential_addys, dob):
 		sup = np.random.choice([k for k in supervisors if k not in sup_list], 1)[0]
 		sup_list += [sup]
 		if k == 0:
-			tenure = np.random.choice(range(6,19),1)[0]
+			tenure = np.random.choice(range(8,25),1)[0]
 			start = "{}/{}".format((today_pd - pd.DateOffset(tenure,'months')).month, (today_pd - pd.DateOffset(tenure,'months')).year)
 			end = "Present"
 		else:
-			tenure += np.random.choice(range(6,19),1)[0]
+			tenure += np.random.choice(range(8,25),1)[0]
 			if ((today_pd - pd.DateOffset(tenure,'months')).year - dob.year <= 18): # Don't do more jobs for young kids
 				break
 			end = start
