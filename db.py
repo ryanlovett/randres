@@ -29,6 +29,24 @@ def get_addy(id):
             ).fetchone()
     return  " ".join([str(x) for x in addy])
 
+def get_schlname(id):
+    db = get_db()
+
+    schl = db.execute(
+            'SELECT name'
+            ' FROM schl WHERE id = ? ORDER BY id DESC', (id,)
+            ).fetchone()
+    return str(schl)
+
+def get_schladdress(id):
+    db = get_db()
+
+    schl = db.execute(
+            'SELECT street, city, state, zip'
+            ' FROM schl WHERE id = ? ORDER BY id DESC', (id,)
+            ).fetchone()
+    return " ".join([str(x) for x in schl])
+
 def get_job_hist(app_id):
     db = get_db()
 

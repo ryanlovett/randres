@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from db import get_db
 from db import get_addy
+from db import get_schlname, get_schladdress
 from db import get_job_hist
 from demos import get_name
 from jobs import get_jobs
@@ -50,8 +51,27 @@ def create():
         	' FROM addy WHERE region = ?', (job_state,) )
         potential_addys = pd.DataFrame(potential_addys.fetchall())
 
+        # Sample addresses within 1k of jobzip
+        close_addys = potential_addys.loc[np.abs(potential_addys.zip - jobzip) <= 1000]
+        if close_addys.shape[0] <= 1000:
+            close_addys = potential_addys
+
         # Address
-        addy_id = potential_addys.sample(1).values[0,0]
+        addy_id = close_addys.sample(1).values[0,0]
+
+        # Pull all the schools from the state
+        potential_schls = db.execute(
+            'SELECT id, name, state, zip'
+            ' FROM addy WHERE state = ?', (job_state,) )
+        potential_schls = pd.DataFrame(potential_schls.fetchall())
+
+        # Sample schools within 1k of jobzip
+        close_schls = potential_schls.loc[np.abs(potential_schls.zip - jobzip) <= 1000]
+        if close_schls.shape[0] <= 1000:
+            close_schls = potential_schls
+
+        # Actual schl
+        schl_id = close_schls.sample(1)values[0,0]
 
         # Age -- get random date between 1980 and 2000
         dob = "{}/{}/{}".format(np.random.choice(range(1,13),1)[0],
@@ -60,7 +80,7 @@ def create():
         graduation_year = pd.to_datetime(dob, format="%m/%d/%Y").year + 18             # Year you turn 18
 
         # Put into its table
-        job_hist = get_jobs(firm, potential_addys, dob) 
+        job_hist = get_jobs(firm, close_addys, dob) 
 
         # Other stuff
         pin = 5494
@@ -104,10 +124,10 @@ def create():
 
         # Redirect
         details = (g.user['id'], job_id, firstname, lastname, gender, race, dob, phone, email,
-        		addy_id, hours, ever_terminated, available_all_week, notice, start_date)
+        		addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, graduation_year)
         curs.execute(
             'INSERT INTO app (user_id, job_id, firstname, lastname, gender, race, dob, phone, email,'
-        	' addy_id, hours, ever_terminated, available_all_week, notice, start_date)'
+        	' addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year)'
             ' VALUES ({})'.format(", ".join(["?" for k in details])),
             details
         )
@@ -128,7 +148,9 @@ def create():
         		'contact': [firstname, lastname, phone, email, get_addy(addy_id)],
         		'demos': [gender, race, dob],
         		'job_hist': get_job_hist(lastrow),
-        		'avail': [hours, available_all_week, notice, start_date]
+        		'avail': [hours, available_all_week, notice, start_date],
+                'schl': [grad_year, get_schladdress(schl_id), get_schlname(schl_id)]
+
         }
         return render_template('generate/show_app.html', details=full_details)
 
@@ -139,16 +161,18 @@ def show_details():
 
 	details = db.execute(
 	'SELECT user_id, job_id, firstname, lastname, gender, race, dob, phone, email,'
-        	' addy_id, hours, ever_terminated, available_all_week, notice, start_date'
+        	' addy_id, hours, ever_terminated, available_all_week, notice, start_date,'
+            ' schl_id, grad_year'
 	' FROM app WHERE id = {}'.format(app_id)
 	).fetchone()
 
-	user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date = details
+	user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year = details
 	full_details = {
 		'contact': [firstname, lastname, phone, email, get_addy(addy_id)],
 		'demos': [gender, race, dob],
 		'job_hist': get_job_hist(app_id),
-        'avail': [hours, available_all_week, notice, start_date]		
+        'avail': [hours, available_all_week, notice, start_date],
+        'schl': [grad_year, get_schlname(schl_id)]	
 		}
 	return render_template('generate/show_app.html', details=full_details)
 

@@ -28,10 +28,12 @@ CREATE TABLE app (
  available_all_week INTEGER NOT NULL,
  notice TEXT NOT NULL,
  start_date TEXT NOT NULL,
+ schl_id INTEGER NOT NULL,
+ grad_year INTEGER NOT NULL,
  FOREIGN KEY (user_id) REFERENCES user (id),
  FOREIGN KEY (job_id) REFERENCES job (id),
- FOREIGN KEY (addy_id) REFERENCES addy (id)
- FOREIGN KEY (schl_id) REFERENCES addy (id)
+ FOREIGN KEY (addy_id) REFERENCES addy (id),
+ FOREIGN KEY (schl_id) REFERENCES schl (id)
 );
 
 CREATE TABLE work_hist (
@@ -60,6 +62,8 @@ CREATE TABLE addy (
 CREATE TABLE schl (
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  name TEXT NOT NULL,
+ street TEXT NOT NULL,
+ city TEXT NOT NULL,
  state TEXT NOT NULL,
  zip INTEGER NOT NULL
 );
