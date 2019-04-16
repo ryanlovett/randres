@@ -4,7 +4,7 @@ import sqlite3
 import csv
 import gzip
 
-if input("Are you sure you want to run this script? Any existing information in the database will be overwritten (y/n)") != "y":
+if str(input("Are you sure you want to run this script? Any existing information in the database will be overwritten (y/n)")).lower() != "y":
     exit()
 
 conn = sqlite3.connect('instance/randres.sqlite')
