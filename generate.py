@@ -158,7 +158,7 @@ def create():
         		'job_hist': get_job_hist(lastrow),
         		'avail': [hours, available_all_week, notice, start_date],
                 'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
-                'id':addy_id,
+                'id':lastrow,
                 'job_id':job_id,
                 'firm':firm,
         }
