@@ -25,7 +25,14 @@ def create():
         race = request.form['race']
         gender = request.form['gender']
         firm = request.args.get("firm")
-       
+
+        # Allow for randomized race / gender
+        if race == "Random":
+            race = np.random.choice(['Black','White'],1)[0]
+        
+        if gender == "Random":
+            gender = np.random.choice(['Male','Female'],1)[0]
+              
         db = get_db()
         curs = db.cursor()
         error = None
