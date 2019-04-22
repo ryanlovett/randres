@@ -47,7 +47,11 @@ def get_jobs(curr_app, potential_addys, dob):
 	existing_jobs = []
 	for k in range(njobs):
 		jobcat = np.random.choice(list(jobs.keys()),1)[0]
-		job =  np.random.choice([k for k in jobs[jobcat] if k is not curr_app and k not in existing_jobs], 1)[0]
+		poss_jobs = [k for k in jobs[jobcat] if k is not curr_app and k not in existing_jobs] 
+		while len(poss_jobs) == 0:
+			jobcat = np.random.choice(list(jobs.keys()),1)[0]
+			poss_jobs = [k for k in jobs[jobcat] if k is not curr_app and k not in existing_jobs] 
+		job =  np.random.choice(poss_jobs, 1)[0]
 		existing_jobs += [job]
 		try:
 			pos = np.random.choice(postions[jobcat], 1)[0]
