@@ -198,10 +198,11 @@ def show_details():
     	'job_hist': get_job_hist(app_id),
         'avail': [hours, available_all_week, notice, start_date],
         'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
-        'id':addy_id,
+        'id':app_id,
         'job_id':job_id,
         'firm':firm,
     	}
+    print(full_details)
     return render_template('generate/show_app.html', details=full_details)
 
 
