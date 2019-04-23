@@ -88,3 +88,7 @@ INSERT INTO user (username) VALUES ("crwalters");
 INSERT INTO job (firm, city, state, street, zipcode, link, user_id) VALUES 
 	("KFC", "Excelsior Springs", "MO", "1744 West Jesse James Road", 64024,
 		"https://jobs.kfc.com/job?id=450fa414-4f72-4f45-b817-a752013adce1", 1);
+
+INSERT INTO job (firm, city, state, street, zipcode, link, user_id) VALUES 
+	("Target", "Tucson", "AZ", "3699 e broadway blvd", 85716,
+		"https://jobs.target.com/job/tucson/sales-floor-team-member/1118/11428510", 1);	
