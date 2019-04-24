@@ -16,14 +16,31 @@ account_sid = 'AC81792c0f6bf476fc9e2ecb83ea8e12d5'
 with open('randres/static/tokens.txt') as tf:
     auth_token = tf.readline().strip('\n')
 client = Client(account_sid, auth_token)
+
 numbers = client.available_phone_numbers("US").local.list(in_region="NY", sms_enabled=True, voice_enabled=True)
 phone_number = numbers[0].phone_number
 
+
+# voicemail twimlet
+vmail = "http://twimlets.com/voicemail?Email=randresmaster%40gmail.com&Message=The%20person%20you%20have%20called%20is%20currently%20unavailable.%20Please%20leave%20a%20message%20at%20the%20tone.&Transcribe=true&"
+client.incoming_phone_numbers.list()[0].update(voice_url=vmail)
+
+client.incoming_phone_numbers
+
+client.incoming_phone_numberscreate(
+    phone_number='',
+    voice_method='GET',
+    voice_url=vmail)
+
 country = client.pricing.phone_numbers.countries("US").fetch()
 for p in country.phone_number_prices:
-    print("{} {}".format(p['type'], p['current_price']))
+    print("{} {}".format(p['number_type'], p['current_price']))
 
 bp = Blueprint('generate', __name__, url_prefix='/generate')
+
+
+# voicemail success
+# https://handler.twilio.com/twiml/EH4c343ddce2764170a30f30a06b83f9dd
 
 @bp.route('/create', methods=('GET', 'POST'))
 def create():
