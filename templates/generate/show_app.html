@@ -24,6 +24,7 @@
     <div>Race: {{ details['demos'][1] }}</div>
     <div>Gender: {{ details['demos'][0] }}</div>
     <div>DOB: {{ details['demos'][2] }}</div>
+    <div>SSN: {{ "{}-{}-{}".format(details['social'].zfill(9)[0:3],details['social'].zfill(9)[3:5],details['social'].zfill(9)[5:]) }}</div>  
 </div>
   <br />
 

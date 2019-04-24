@@ -34,3 +34,13 @@ with gzip.open(schl_list, mode="rt") as fin:
                         "VALUES (?, ?, ?, ?, ?)",
                         (i['SCHNAM09'], i['LSTREE09'], i['LCITY09'], i['LSTATE09'], i['LZIP09']))
     conn.commit()
+
+# Add the ssn list
+ssn_list = 'randres/assets/ssn_sample.csv.gz'
+with gzip.open(ssn_list, mode="rt") as fin: 
+    dr = csv.DictReader(fin) 
+    for i in dr:
+        db.execute("INSERT INTO ssns (ssn) "
+                        "VALUES (?)",
+                        (i['ssn'],))
+    conn.commit()

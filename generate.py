@@ -50,13 +50,19 @@ def create():
         # Generate contact information
         phone = 4562311231
 
+        # Generate social
+        socials = db.execute('SELECT ssn from SSNS' 
+                    ' ORDER BY RANDOM()'
+                    ' LIMIT 1').fetchone()
+        social = [s for s in socials][0]
+
         # Pull all addresses for state where job is located
         job_state, job_zip = db.execute('SELECT state, zipcode FROM job WHERE id = ?',
-        		(job_id,) ).fetchone()
+                (job_id,) ).fetchone()
 
         potential_addys = db.execute(
-        	'SELECT id, numb, street, city, region, zip'
-        	' FROM addy WHERE region = ?', (job_state,) )
+            'SELECT id, numb, street, city, region, zip'
+            ' FROM addy WHERE region = ?', (job_state,) )
         potential_addys = pd.DataFrame(potential_addys.fetchall())
 
         # Sample addresses within 1k of jobzip
@@ -132,10 +138,10 @@ def create():
 
         # Redirect
         details = (g.user['id'], job_id, firstname, lastname, gender, race, dob, phone, email,
-        		addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year)
+                addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year, social)
         curs.execute(
             'INSERT INTO app (user_id, job_id, firstname, lastname, gender, race, dob, phone, email,'
-        	' addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year)'
+            ' addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year, social)'
             ' VALUES ({})'.format(", ".join(["?" for k in details])),
             details
         )
@@ -153,14 +159,15 @@ def create():
  
         # Dictionary with full details
         full_details = {
-        		'contact': [firstname, lastname, phone, "{}+{}@gmail.com".format(email,lastrow), get_addy(addy_id)],
-        		'demos': [gender, race, dob],
-        		'job_hist': get_job_hist(lastrow),
-        		'avail': [hours, available_all_week, notice, start_date],
+                'contact': [firstname, lastname, phone, "{}+{}@gmail.com".format(email,lastrow), get_addy(addy_id)],
+                'demos': [gender, race, dob],
+                'job_hist': get_job_hist(lastrow),
+                'avail': [hours, available_all_week, notice, start_date],
                 'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
                 'id':lastrow,
                 'job_id':job_id,
                 'firm':firm,
+                'social': str(social),
         }
         return render_template('generate/show_app.html', details=full_details)
 
@@ -183,25 +190,26 @@ def show_details():
 
     details = db.execute(
     'SELECT user_id, job_id, firstname, lastname, gender, race, dob, phone, email,'
-        	' addy_id, hours, ever_terminated, available_all_week, notice, start_date,'
-            ' schl_id, grad_year'
+            ' addy_id, hours, ever_terminated, available_all_week, notice, start_date,'
+            ' schl_id, grad_year, social'
     ' FROM app WHERE id = {}'.format(app_id)
     ).fetchone()
-    user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year = details
+    user_id, job_id, firstname, lastname, gender, race, dob, phone, email, addy_id, hours, ever_terminated, available_all_week, notice, start_date, schl_id, grad_year, social = details
 
     firm = db.execute('SELECT firm FROM job WHERE id = {}'.format(job_id)).fetchone()
     firm = "".join([x for x in firm])
 
     full_details = {
-    	'contact': [firstname, lastname, phone, "{}+{}@gmail.com".format(email,app_id), get_addy(addy_id)],
-    	'demos': [gender, race, dob],
-    	'job_hist': get_job_hist(app_id),
+        'contact': [firstname, lastname, phone, "{}+{}@gmail.com".format(email,app_id), get_addy(addy_id)],
+        'demos': [gender, race, dob],
+        'job_hist': get_job_hist(app_id),
         'avail': [hours, available_all_week, notice, start_date],
         'schl': [get_schlname(schl_id), get_schladdress(schl_id), grad_year],
         'id':app_id,
         'job_id':job_id,
         'firm':firm,
-    	}
+        'social': str(social),       
+        }
     print(full_details)
     return render_template('generate/show_app.html', details=full_details)
 
