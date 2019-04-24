@@ -11,6 +11,18 @@ from db import get_existing_names
 from demos import get_name
 from jobs import get_jobs
 
+from twilio.rest import Client
+account_sid = 'AC81792c0f6bf476fc9e2ecb83ea8e12d5'
+with open('randres/static/tokens.txt') as tf:
+    auth_token = tf.readline().strip('\n')
+client = Client(account_sid, auth_token)
+numbers = client.available_phone_numbers("US").local.list(in_region="NY", sms_enabled=True, voice_enabled=True)
+phone_number = numbers[0].phone_number
+
+country = client.pricing.phone_numbers.countries("US").fetch()
+for p in country.phone_number_prices:
+    print("{} {}".format(p['type'], p['current_price']))
+
 bp = Blueprint('generate', __name__, url_prefix='/generate')
 
 @bp.route('/create', methods=('GET', 'POST'))
